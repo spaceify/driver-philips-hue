@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=100%, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<link href="tile.css" rel="stylesheet" type="text/css" media="screen">
+
+	<script src="http://edge.spaceify.net/libs/spaceifyinitialize.js?jquery"></script>	<!-- Get Spaceify's classes and jQuery. Wait for spaceifyReady event! -->
+
+	<title></title>
+
+	<script>
+		window.addEventListener("spaceifyReady", function()
+			{
+			jQuery("#slided0").css({left: 0 * 276, visibility: "visible"});
+			jQuery("#slideTile").css({visibility: "visible"});
+			});
+
+		window.addEventListener("click", function()
+			{
+			window.open("http://edge.spaceify.net/service/spaceify/driver-philips-hue", "_blank");
+			});
+	</script>
+</head>
+
+<body>
+	<div class="slideTile" id="slideTile">
+		<div class="container" id="container">
+			<div class="slide" id="slided0">					<!-- driver-philips-hue -->
+				<img src="images/driver-philips-hue.png" id="slidei0">
+
+				<div class="slideText">
+					Philips Hue
+				</div>
+
+				<div class="slideText">
+					Spaceify Oy
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+
+</html>

@@ -1,1 +1,2 @@
-# driver-philips-hue
+# Philips Hue Lighting driver for Spaceify Edge Platform
+

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+
+	<title>Philips Hue lighting driver</title>
+
+	<script src="http://edge.spaceify.net/libs/spaceifyinitialize.js?jquery"></script>					<!-- Get Spaceify's classes and jQuery. Wait for spaceifyReady event! -->
+
+	<link href="index.css" rel="stylesheet" type="text/css" media="screen">
+
+	<script type="text/javascript">
+		var spaceify = null;
+		var driverPhilipsHue = null;
+		var driverPhilipsHueId = "default";
+		var lightsService = null;
+
+			// DOM AND EVENTS -- -- -- -- -- -- -- -- -- -- //
+		window.addEventListener("spaceifyReady", function()
+			{
+			var query = new SpaceifyNetwork().parseQuery(window.location.href);				// driver-philips-hue id could be passed in the URL
+			driverPhilipsHueId = ("driverPhilipsHueId" in query ? query.driverPhilipsHueId : "default");
+
+			spaceify = new SpaceifyApplication();
+
+			driverPhilipsHue = new PhilipsHueDriver();
+			spaceify.start(driverPhilipsHue, "spaceify/driver-philips-hue");
+			});
+
+			// PhilipsHueDriver -- -- -- -- -- -- -- -- -- -- //
+		function PhilipsHueDriver()
+			{
+			var self = this;
+
+			var timeOut = null;
+			var contentType = "";
+
+				// INITIALIZATION -- -- -- -- -- -- -- -- -- -- //
+			self.start = function()
+				{
+				self.resize();
+
+				lightsService = spaceify.getRequiredService("spaceify.org/services/lights");
+
+				lightsService.setConnectionListener(connectionListener);
+				lightsService.setDisconnectionListener(disconnectionListener);
+				lightsService.exposeRpcMethod("loadContent", self, loadContent);
+
+				connectionListener(/*lightsService.getId()*/);
+				}
+
+			self.fail = function()
+				{
+				}
+				
+				// CONNECTION LISTENERS -- -- -- -- -- -- -- -- -- -- //
+			var connectionListener = function(connectionId)
+				{
+				showMessage("Connected to the lights hub.");
+
+				lightsService.callRpc("lightsConnect", [driverPhilipsHueId], null, null);
+				}
+
+			var disconnectionListener = function(connectionId)
+				{
+				showMessage("No connection to the lights hub.");
+				}
+
+				// EXPOSED RPC METHODS -- -- -- -- -- -- -- -- -- -- //
+
+
+				// -- -- -- -- -- -- -- -- -- -- //
+
+			var showMessage = function(errstr)
+				{
+				$("#message_div").empty().append($.parseHTML(errstr)).show();
+
+				if(timeOut != null)
+					clearTimeout(timeOut);
+
+				timeOut = setTimeout(function()
+					{
+					timeOut = null;
+					$("#message_div").hide();
+					}, 5000);
+
+				console.log(errstr);
+				}
+
+			}
+	</script>
+</head>
+
+<body>
+	<div id="message_div" class="messagediv"></div>
+	<h1>Philips Hue lighting driver UI</h1>
+</body>
+
+</html>

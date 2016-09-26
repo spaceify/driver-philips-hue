@@ -1,0 +1,32 @@
+{
+  "provides_services": [
+    {
+      "service_name": "spaceify.org/services/lights",
+      "service_type": "open"
+    }
+  ],
+  "name": "Philips Hue lighting driver",
+  "unique_name": "spaceify/driver-philips-hue",
+  "version": "0.1.0",
+  "type": "sandboxed",
+  "category": "multimedia",
+  "start_command": "node driver-philips-hue",
+  "developer": {
+    "name": "Spaceify Oy",
+    "url": "http://spaceify.net",
+    "email": "admin@spaceify.net"
+  },
+  "short_description": "Light control driver for Philips Hue lighting.",
+  "appstore_description": "You can setup Philips Hue lights using this driver and them control them in other apps.",
+  "license": "MIT",
+  "creation_date": "2016-09-23 17:00:00",
+  "implements": [
+    "WEB_SERVER"
+  ],
+  "images": [
+    {
+      "file": "icon.png"
+    }
+  ],
+  "unique_directory": "spaceify/driver-philips-hue/"
+}
