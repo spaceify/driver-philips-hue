@@ -6,7 +6,7 @@
     }
   ],
   "name": "Philips Hue lighting driver",
-  "unique_name": "spaceify/driver-philips-hue",
+  "unique_name": "spaceify/driverphilipshue",
   "version": "0.1.0",
   "type": "sandboxed",
   "category": "multimedia",
@@ -28,5 +28,5 @@
       "file": "icon.png"
     }
   ],
-  "unique_directory": "spaceify/driver-philips-hue/"
+  "unique_directory": "spaceify/driverphilipshue/"
 }
