@@ -1,6 +1,15 @@
 "use strict";
 
-var request = require("request");
+var request = null;
+
+try
+	{
+	request = require("/api/node_modules/request");
+	}
+catch (e)
+	{
+	request = require("request");
+	}
 
 function HueBackend()
 {

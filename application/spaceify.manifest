@@ -3,7 +3,11 @@
     {
       "service_name": "spaceify.org/services/lights",
       "service_type": "open"
-    }
+    },
+    {
+      "service_name": "spaceify.org/services/lights/private/driver_philips_hue",
+      "service_type": "open"
+    }	
   ],
   "name": "Philips Hue lighting driver",
   "unique_name": "spaceify/driverphilipshue",

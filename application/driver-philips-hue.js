@@ -24,7 +24,13 @@ var onClientDisconnected = function(connectionId)
 	// EXPOSED JSON-RPC METHODS -- -- -- -- -- -- -- -- -- -- //
 var lightsConnect = function(lightsServiceId)
 	{ // Each connected lights service web page has an lightsServiceId (e.g. "default")
-	lightsServiceIds[arguments[arguments.length-1].connectionId] = {lightsServiceId: lightsServiceId};	// Add bigscreen to the connected bigscreens
+	//lightsServiceIds[arguments[arguments.length-1].connectionId] = {lightsServiceId: lightsServiceId};	// Add bigscreen to the connected bigscreens
+	//console.log("LightsConne");	
+	}
+
+var getReachableLights = function()
+	{
+	return "Jee jee se toimii";	
 	}
 
 var getLightsServiceIds = function()
@@ -46,6 +52,8 @@ self.start = function()
 
 	lightsService.exposeRpcMethod("getLightsServiceIds", self, getLightsServiceIds);
 	lightsService.exposeRpcMethod("lightsConnect", self, lightsConnect);
+
+	lightsService.exposeRpcMethod("getConnectedLights", self, self.getConnectedLights);
 
 	lightsService.setDisconnectionListener(onClientDisconnected);
 	}
