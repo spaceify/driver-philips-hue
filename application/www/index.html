@@ -14,12 +14,12 @@
 		var driverPhilipsHue = null;
 		var driverPhilipsHueId = "default";
 		var lightsService = null;
-		var privateService = null;
+		
 
 			// DOM AND EVENTS -- -- -- -- -- -- -- -- -- -- //
 		window.addEventListener("spaceifyReady", function()
 			{
-			var query = new SpaceifyNetwork().parseQuery(window.location.href);				// driver-philips-hue id could be passed in the URL
+			var query = new SpaceifyNetwork().parseQuery(window.location.href);		// driver-philips-hue id could be passed in the URL
 			driverPhilipsHueId = ("driverPhilipsHueId" in query ? query.driverPhilipsHueId : "default");
 
 			spaceify = new SpaceifyApplication();
@@ -36,37 +36,46 @@
 			var timeOut = null;
 			var contentType = "";
 
-				// INITIALIZATION -- -- -- -- -- -- -- -- -- -- //
+			// Called by spaceify init on success. Function needs to be named exactly like this. 
+			
 			self.start = function()
 				{
+				/*****
+ 
+				The following non-commented code works because spaceify init automatically opens connections to	
+				all open services provided by the app itself (declared in manifest). If you want to use some other service,
+				you need to open a connection to it dynamically like this: 
 				
+				var serviceConnection = new SpaceifyService();
+				serviceConnection.connect("spaceify.org/services/lights/private/driver_philips_hue", function(err, privateService)
+					{				
+					privateService.callRpc("getReachableLights",[], self, function(err, data)
+						{
+						console.log("getReachableLights Rpc call returned "+err+data);
+						});							
+					});
 
+				*******/	
+
+				var privateService = spaceify.getRequiredService("spaceify.org/services/lights/private/driver_philips_hue");
+				privateService.callRpc("getReachableLights",[], self, function(err, data)
+					{
+					console.log("getReachableLights Rpc call returned "+err+data);
+					});
+
+
+								
 				//lightsService = spaceify.getRequiredService("spaceify.org/services/lights");
-
 				//lightsService.setConnectionListener(connectionListener);
 				//lightsService.setDisconnectionListener(disconnectionListener);
 				
 				//lightsService.exposeRpcMethod("loadContent", self, loadContent);
 				
-				console.log("Trying to get private service");
-				
-				var serviceConnection = new SpaceifyService();
-				serviceConnection.connect("spaceify.org/services/lights/private/driver_philips_hue", function(err, privateService)
-					{
-					console.log("in callback of SpaceifyService.connect");					
-					// services sisältää: {insecure: Service instanssi, secure: Service instanssi}
-					// Service löytyy www/lib/service.js ja siinä on tutut exposeRpcMethod ja callRpc ja muuta
-					privateService.callRpc("getReachableLights",self, function(err, data)
-						{
-						console.log("getReachableLights Rpc call returned "+err+data);
-						});							
-					});
-								
-				
-				console.log("Rpc of private service called");
-				
+
 				//connectionListener(/*lightsService.getId()*/);
 				}
+
+			// Called by spaceify init on success. Function needs to be named exactly like this. 
 
 			self.fail = function()
 				{

@@ -13,6 +13,7 @@ var self = this;
 
 var lightsServiceIds = {};
 var lightsService = null;
+var privateService = null;
 
 	// CONNECTIONS  -- -- -- -- -- -- -- -- -- -- //
 var onClientDisconnected = function(connectionId)
@@ -49,11 +50,12 @@ var getLightsServiceIds = function()
 self.start = function()
 	{
 	lightsService = spaceify.getProvidedService("spaceify.org/services/lights");
+	privateService = spaceify.getProvidedService("spaceify.org/services/lights/private/driver_philips_hue");
 
 	lightsService.exposeRpcMethod("getLightsServiceIds", self, getLightsServiceIds);
 	lightsService.exposeRpcMethod("lightsConnect", self, lightsConnect);
 
-	lightsService.exposeRpcMethod("getConnectedLights", self, self.getConnectedLights);
+	privateService.exposeRpcMethod("getReachableLights", self, getReachableLights);
 
 	lightsService.setDisconnectionListener(onClientDisconnected);
 	}
