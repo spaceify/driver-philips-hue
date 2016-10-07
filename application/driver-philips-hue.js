@@ -39,7 +39,7 @@ var refreshGateways = function(callback)
 
 			for (var i=0; i < gateways.length; i++ )
 				{
-				driverState[i] = {id: gateways[i].id, ip: gateways[i].internalipaddress, paired: true}; 				
+				driverState[gateways[i].id] = {id: gateways[i].id, ip: gateways[i].internalipaddress, paired: true}; 				
 				}	
 			}
 
