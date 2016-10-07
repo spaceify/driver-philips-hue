@@ -176,7 +176,7 @@ hueBackend.findHueGateways(function(err, gateways)
 		return;		
 		}
 		
-	console.log("Found following local HUE gateways: "+ JSON.stringify(gateways));	
+	//console.log("Found following local HUE gateways: "+ JSON.stringify(gateways));	
 	hueBackend.connectToGateway(gateways[0].internalipaddress, function(err, statusCode, data)
 		{
 		if (err)
@@ -184,17 +184,17 @@ hueBackend.findHueGateways(function(err, gateways)
 			console.log(err);	
 			return;		
 			}
-		console.log("HUE gateway replied when connecting: "+ JSON.stringify(data));
+		//console.log("HUE gateway replied when connecting: "+ JSON.stringify(data));
 		
 		if (statusCode==101)
 			{
-			console.log("Please press the button on HUE gateway and try again!");			
+			//console.log("Please press the button on HUE gateway and try again!");			
 			return;			
 			}
 
 		hueBackend.getReachableLights(gateways[0].internalipaddress, function(err,data)
 			{
-			console.log("Following REACHABLE lights were found at the gateway: "+ JSON.stringify(data));
+			//console.log("Following REACHABLE lights were found at the gateway: "+ JSON.stringify(data));
 			
 			for (var i in data)
 				{
@@ -205,8 +205,8 @@ hueBackend.findHueGateways(function(err, gateways)
 						console.log(err);	
 						return;		
 						}
-					else
-						console.log(data);						
+					//else
+					//	console.log(data);						
 					});
 				setTimeout(function() 
 					{
@@ -219,4 +219,5 @@ hueBackend.findHueGateways(function(err, gateways)
 	}); 
 
 
-module.export = HueBackend;
+module.exports = HueBackend;
+

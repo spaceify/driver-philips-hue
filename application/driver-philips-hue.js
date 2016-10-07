@@ -50,10 +50,13 @@ var refreshGateways = function(callback)
 
 var recurseConnectToGateways = function(gatewayIndex, gatewayKeys, callback)
 	{
-	if (gatewayIndex = gatewayKeys.length)
+	if (gatewayIndex >= gatewayKeys.length)
+		{		
 		callback();
-	
+		return;		
+		}
 	var i = gatewayKeys[gatewayIndex];	
+	
 	hueBackend.connectToGateway(driverState[i].ip, function(err, statusCode, data)
 		{
 		if (err)
@@ -66,8 +69,8 @@ var recurseConnectToGateways = function(gatewayIndex, gatewayKeys, callback)
 			driverState[i].paired = false;
 		
 					
-		else
-			recurseConnectToGateways(gatewayIndex+1, gatewayKeys, callback);		
+		
+		recurseConnectToGateways(gatewayIndex+1, gatewayKeys, callback);		
 		});	
 	};
 
@@ -79,26 +82,44 @@ var connectToGateways = function(callback)
 	};	
 
 
+var recurseGetReachableLights = function(gatewayIndex, gatewayKeys, callback)
+	{
+	if (gatewayIndex >= gatewayKeys.length)
+		{		
+		callback();
+		return;		
+		}
+
+	var i = gatewayKeys[gatewayIndex];	
+	
+	if (driverState[i].paired)
+		{
+		hueBackend.getReachableLights(driverState[i].ip, function(err,data)
+			{
+			if (err)
+				console.log(err);
+			driverState[i].lights = data;
+			recurseGetReachableLights(gatewayIndex+1, gatewayKeys, callback);				
+			});
+		}
+	else
+		recurseGetReachableLights(gatewayIndex+1, gatewayKeys, callback);	
+	};
+
+
 	
 var getReachableLights = function(callback)
 	{
-	for (var i in driverState)
+	recurseGetReachableLights(0,Object.keys(driverState), function()
 		{
-		if (driverState[i].paired)
-			hueBackend.getReachableLights(driverState[i].ip, function(err,data)
-				{
-				if (err)
-					console.log(err);
-				driverState.lights = data;
-				});
-		}	
-	callback(driverState);	
+		callback(driverState);
+		});
 	};
 
 
 // Exposed RPC methods
 
-self.getLights = function(callobj, callback)
+self.getLightsC = function(callback)
 	{
 	refreshGateways(function()
 		{
@@ -113,15 +134,29 @@ self.getLights = function(callobj, callback)
 	};	
 
 
-self.setLightState = function(gatewayId, lightId, state)
+self.getLights = function()
+	{
+	return self.sync.getLightsC();	
+	};
+
+self.setLightStateC = function(gatewayId, lightId, state, callback)
 	{
 	hueBackend.setLightState(driverState[gatewayId].ip, lightId, state, function(err,data)
 		{
-		if (err)
-			console.log(err);	
+		callback(err, data);	
 		});
 	};	
 
+self.setLightState = function(gatewayId, lightId, state)
+	{
+	if (state.hasOwnProperty("on") && state.on =="true")
+		state.on=true;
+	
+	if (state.hasOwnProperty("on") && state.on == "false")
+		state.on = false;
+
+	return self.sync.setLightStateC(gatewayId, lightId, state);	
+	};
 	
 // Implementation of the start() and fail() callbacks required by Spaceify
 
@@ -148,4 +183,6 @@ var stop = function()
 }
 
 var philipsHueDriver = new PhilipsHueDriver();
+
+//philipsHueDriver.getLights(null, function(err,lights) {console.log("getLights palautti: " + JSON.stringify(lights));});
 spaceify.start(philipsHueDriver, {webservers: {http: true, https: true}});
