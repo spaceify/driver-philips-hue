@@ -7,6 +7,8 @@
 
 var spaceify = require("/api/spaceifyapplication.js");
 
+var HueBackend = require("./huebackend");
+
 function PhilipsHueDriver()
 {
 var self = this;
@@ -15,59 +17,133 @@ var lightsServiceIds = {};
 var lightsService = null;
 var privateService = null;
 
-	// CONNECTIONS  -- -- -- -- -- -- -- -- -- -- //
-var onClientDisconnected = function(connectionId)
+var hueBackend = new HueBackend();
+
+
+var driverState = {};
+
+
+var refreshGateways = function(callback)
 	{
-	if(connectionId in lightsServiceIds)
-		delete lightsServiceIds[connectionId];
-	}
-
-	// EXPOSED JSON-RPC METHODS -- -- -- -- -- -- -- -- -- -- //
-var lightsConnect = function(lightsServiceId)
-	{ // Each connected lights service web page has an lightsServiceId (e.g. "default")
-	//lightsServiceIds[arguments[arguments.length-1].connectionId] = {lightsServiceId: lightsServiceId};	// Add bigscreen to the connected bigscreens
-	//console.log("LightsConne");	
-	}
-
-var getReachableLights = function()
-	{
-	return "Jee jee se toimii";	
-	}
-
-var getLightsServiceIds = function()
-	{ // Return a list of unique lights service ids.
-	var ids = [];
-	for(var connectionId in lightsServiceIds)
+	hueBackend.findHueGateways(function(err, gateways)
 		{
-		if(!ids.indexOf(lightsServiceIds[connectionId].lightsServiceId))
-			ids.push(lightsServiceIds[connectionId].lightsServiceId);
-		}
+		if (err)
+			{
+			console.log(err);	
+			return;		
+			}			
+		
+		if (gateways && gateways.length >0)
+			{
+			driveState = new Object();
 
-	return ids;
-	}
+			for (var i=0; i < gateways.length; i++ )
+				{
+				driverState[i] = {id: gateways[i].id, ip: gateways[i].internalipaddress, paired: true}; 				
+				}	
+			}
 
-	// IMPLEMENT start AND fail IN YOUR APPLICATION!!! -- -- -- -- -- -- -- -- -- -- //
+		callback();		
+		});
+	};
+
+
+var recurseConnectToGateways = function(gatewayIndex, gatewayKeys, callback)
+	{
+	if (gatewayIndex = gatewayKeys.length)
+		callback();
+	
+	var i = gatewayKeys[gatewayIndex];	
+	hueBackend.connectToGateway(driverState[i].ip, function(err, statusCode, data)
+		{
+		if (err)
+			{				
+			console.log(err);		
+			//delete driverState[i]; 
+			}
+
+		else if (statusCode == 101)
+			driverState[i].paired = false;
+		
+					
+		else
+			recurseConnectToGateways(gatewayIndex+1, gatewayKeys, callback);		
+		});	
+	};
+
+
+
+var connectToGateways = function(callback)
+	{
+	recurseConnectToGateways(0,Object.keys(driverState), callback);
+	};	
+
+
+	
+var getReachableLights = function(callback)
+	{
+	for (var i in driverState)
+		{
+		if (driverState[i].paired)
+			hueBackend.getReachableLights(driverState[i].ip, function(err,data)
+				{
+				if (err)
+					console.log(err);
+				driverState.lights = data;
+				});
+		}	
+	callback(driverState);	
+	};
+
+
+// Exposed RPC methods
+
+self.getLights = function(callobj, callback)
+	{
+	refreshGateways(function()
+		{
+		connectToGateways(function()
+			{
+			getReachableLights(function(lights)
+				{
+				callback(null, lights);		
+				});			
+			});		
+		});		
+	};	
+
+
+self.setLightState = function(gatewayId, lightId, state)
+	{
+	hueBackend.setLightState(driverState[gatewayId].ip, lightId, state, function(err,data)
+		{
+		if (err)
+			console.log(err);	
+		});
+	};	
+
+	
+// Implementation of the start() and fail() callbacks required by Spaceify
+
 self.start = function()
 	{
 	lightsService = spaceify.getProvidedService("spaceify.org/services/lights");
 	privateService = spaceify.getProvidedService("spaceify.org/services/lights/private/driver_philips_hue");
 
-	lightsService.exposeRpcMethod("getLightsServiceIds", self, getLightsServiceIds);
-	lightsService.exposeRpcMethod("lightsConnect", self, lightsConnect);
+	lightsService.exposeRpcMethod("getLights", self, self.getLights);
+	lightsService.exposeRpcMethod("setLightState", self, self.setLightState);
 
 	privateService.exposeRpcMethod("getReachableLights", self, getReachableLights);
-
-	lightsService.setDisconnectionListener(onClientDisconnected);
-	}
+	};
 
 self.fail = function(err)
 	{	
-	}
+	};
 
 var stop = function()
 	{
 	spaceify.stop();
-	}
+	};
 
 }
 
