@@ -119,8 +119,10 @@ var getReachableLights = function(callback)
 
 // Exposed RPC methods
 
-self.getLightsC = function(callback)
+self.getLights = function(callObj, callback)
 	{
+	callback(null,"ball blaaa!!!");
+
 	refreshGateways(function()
 		{
 		connectToGateways(function()
@@ -134,12 +136,8 @@ self.getLightsC = function(callback)
 	};	
 
 
-self.getLights = function()
-	{
-	return self.sync.getLightsC();	
-	};
 
-self.setLightStateC = function(gatewayId, lightId, state, callback)
+self.setLightState = function(gatewayId, lightId, state, callObj, callback)
 	{
 	hueBackend.setLightState(driverState[gatewayId].ip, lightId, state, function(err,data)
 		{
@@ -147,16 +145,7 @@ self.setLightStateC = function(gatewayId, lightId, state, callback)
 		});
 	};	
 
-self.setLightState = function(gatewayId, lightId, state)
-	{
-	if (state.hasOwnProperty("on") && state.on =="true")
-		state.on=true;
-	
-	if (state.hasOwnProperty("on") && state.on == "false")
-		state.on = false;
 
-	return self.sync.setLightStateC(gatewayId, lightId, state);	
-	};
 	
 // Implementation of the start() and fail() callbacks required by Spaceify
 
