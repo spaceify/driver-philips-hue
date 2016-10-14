@@ -121,8 +121,6 @@ var getReachableLights = function(callback)
 
 self.getLights = function(callObj, callback)
 	{
-	callback(null,"ball blaaa!!!");
-
 	refreshGateways(function()
 		{
 		connectToGateways(function()
@@ -139,6 +137,8 @@ self.getLights = function(callObj, callback)
 
 self.setLightState = function(gatewayId, lightId, state, callObj, callback)
 	{
+	console.log("PhilipsHueDriver::setLightState() "+ JSON.stringify(state));
+
 	hueBackend.setLightState(driverState[gatewayId].ip, lightId, state, function(err,data)
 		{
 		callback(err, data);	
