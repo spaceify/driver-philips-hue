@@ -25,6 +25,9 @@ var userName = "newdeveloper3";
 
 var gateways = null;
 
+var latestLightStates = new Object();		//only one state per light
+
+
 self.findHueGateways = function(callback)
 	{
 	
@@ -146,15 +149,15 @@ self.setLightState = function(gatewayIp, lightId, state, callback)
 	
 	request({url: url, method: "PUT", json: state}, function (err, res, data)
 		{
-    		if (err) 
+    	if (err) 
 			{
-      			callback(err, null);
-    			}
+      		callback(err, null);
+    		}
 		
 		else if (res.statusCode !== 200)
 			{
 			callback("Error, http server returned: "+res.statusCode, null);
-    			} 
+    		} 
 		else 
 			{
       			// data is already parsed as JSON:		
@@ -166,7 +169,7 @@ self.setLightState = function(gatewayIp, lightId, state, callback)
 }
 
 //test code
-/*
+
 var hueBackend = new HueBackend();
 hueBackend.findHueGateways(function(err, gateways)
 	{
@@ -198,26 +201,31 @@ hueBackend.findHueGateways(function(err, gateways)
 			
 			for (var i in data)
 				{
-				hueBackend.setLightState(gateways[0].internalipaddress, i, {on: false}, function(err,data)
+				for (var j=0; j<1000; j++)
 					{
-					if (err)
+					hueBackend.setLightState(gateways[0].internalipaddress, i, {on: false}, function(err,data)
 						{
-						console.log(err);	
-						return;		
-						}
-					else
-						console.log(data);						
-					});
+						if (err)
+							{
+							console.log("HueBackend received error:" +err+ " and data: "+data);	
+							return;		
+							}
+						else
+							console.log("HueBackend received data:" +data);						
+						});
+					}
+				/*
 				setTimeout(function() 
 					{
 					hueBackend.setLightState(gateways[0].internalipaddress, i, {on: true}, function(err,data){}); 
 					}, 1000);	
+				*/
 				}			
 			
 			});		
 		});
 	}); 
 
-*/
+
 module.exports = HueBackend;
 
