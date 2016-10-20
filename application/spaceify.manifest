@@ -9,9 +9,16 @@
       "service_type": "open"
     }	
   ],
+  "requires_services": [
+    {
+      "suggested_application": "spaceify/eventchannel",
+      "service_name": "spaceify.org/services/eventchannel"
+    }
+  ],
+
   "name": "Philips Hue lighting driver",
   "unique_name": "spaceify/driverphilipshue",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "type": "sandboxed",
   "category": "multimedia",
   "start_command": "node driver-philips-hue",

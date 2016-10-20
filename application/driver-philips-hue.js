@@ -16,6 +16,7 @@ var self = this;
 var lightsServiceIds = {};
 var lightsService = null;
 var privateService = null;
+var eventChannel = null;
 
 var hueBackend = new HueBackend();
 
@@ -139,8 +140,19 @@ self.setLightState = function(gatewayId, lightId, state, callObj, callback)
 	{
 	console.log("PhilipsHueDriver::setLightState() "+ JSON.stringify(state));
 
+	//throw "throw testaus";
+
 	hueBackend.setLightState(driverState[gatewayId].ip, lightId, state, function(err,data)
 		{
+		console.log("PhilipsHueDriver::setLightState() huebackend returned err: "+err+" data: "+data);	
+		if (!err)
+			{
+			console.log("PhilipsHueDriver::setLightState() trying to call EventChannel::generateEvent()"); 	
+			eventChannel.callRpc("generateEvent",[{name:"spaceify.org/events/lights/statechanged", gatewayId: gatewayId, lightId:lightId, state: state}],self, function(err,data)
+				{
+				console.log("eventChannel replied to generateEvent call, error: "+err+" data: "+data);
+				});
+			}
 		callback(err, data);	
 		});
 	};	
@@ -153,6 +165,7 @@ self.start = function()
 	{
 	lightsService = spaceify.getProvidedService("spaceify.org/services/lights");
 	privateService = spaceify.getProvidedService("spaceify.org/services/lights/private/driver_philips_hue");
+	eventChannel = spaceify.getRequiredService("spaceify.org/services/eventchannel");
 
 	lightsService.exposeRpcMethod("getLights", self, self.getLights);
 	lightsService.exposeRpcMethod("setLightState", self, self.setLightState);

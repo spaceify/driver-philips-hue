@@ -64,8 +64,26 @@
 					});
 
 
-								
-				//lightsService = spaceify.getRequiredService("spaceify.org/services/lights");
+				/*				
+				lightsService = spaceify.getRequiredService("spaceify.org/services/lights");
+				console.log("Trying to crash the driver");
+				lightsService.callRpc("getLights",[],self, function(err,gateways)
+					{
+					console.log(gateways);
+					
+					for (var k in gateways)
+						{
+						for (var j=0; j<100; j++)
+							{
+							lightsService.callRpc("setLightState",[k, "4",{"on": false}], self, function(err, data)
+                                        			{
+                                        			console.log("setLightState returned"+err+data);
+                                        			});
+							}
+						}	
+					
+					});	        	
+				*/
 				//lightsService.setConnectionListener(connectionListener);
 				//lightsService.setDisconnectionListener(disconnectionListener);
 				
