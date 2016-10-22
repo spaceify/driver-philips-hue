@@ -1,13 +1,19 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-	<meta charset="UTF-8">
-
+	<meta charset="utf-8">
 	<title>Philips Hue lighting driver</title>
-
+	<meta name="description" content="">
+	<meta name="author" content="Spaceify Oy">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css"> -->
+	<link rel="stylesheet" href="fonts/roboto/roboto.css">
+	<link rel="stylesheet" href="css/skeleton/normalize.css">
+	<link rel="stylesheet" href="css/skeleton/skeleton.css">
+	<link rel="stylesheet" href="css/index.css">
+	<!-- <link rel="icon" type="image/png" href="images/favicon.png"> -->
 	<script src="http://edge.spaceify.net/libs/spaceifyinitialize.js?jquery"></script>					<!-- Get Spaceify's classes and jQuery. Wait for spaceifyReady event! -->
-
-	<link href="index.css" rel="stylesheet" type="text/css" media="screen">
 
 	<script type="text/javascript">
 		var spaceify = null;
@@ -136,10 +142,25 @@
 			}
 	</script>
 </head>
-
 <body>
-	<div id="message_div" class="messagediv"></div>
-	<h1>Philips Hue lighting driver UI</h1>
-</body>
 
+
+  <div class="container">
+    <div class="row">
+      <div class="one-half column" style="margin-top: 10%">
+
+		<div id="message_div" class="messagediv"></div>
+
+		<h4>Philips Hue lighting driver UI</h4>
+
+		<p>This is a driver service that provides access to Philips Hue devices.</p>
+
+		<p style="margin-top: 2em;">No options to configure yet.</p>
+
+      </div>
+    </div>
+  </div>
+
+
+</body>
 </html>

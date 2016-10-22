@@ -20,7 +20,7 @@
   "unique_name": "spaceify/driverphilipshue",
   "version": "0.1.2",
   "type": "sandboxed",
-  "category": "multimedia",
+  "category": "driver",
   "start_command": "node driver-philips-hue",
   "developer": {
     "name": "Spaceify Oy",
