@@ -118,7 +118,7 @@ var getReachableLights = function(callback)
 	};
 
 
-// Exposed RPC methods
+// Exposed RPC methods towards lightsservice
 
 self.getLights = function(callObj, callback)
 	{
@@ -158,6 +158,13 @@ self.setLightState = function(gatewayId, lightId, state, callObj, callback)
 	};	
 
 
+
+//Exposed rpc methods towards privateservice (own web page)
+
+self.getReachableLights = function(callObj, callback)
+	{
+	getReachableLights(callback);
+	};
 	
 // Implementation of the start() and fail() callbacks required by Spaceify
 
@@ -170,7 +177,7 @@ self.start = function()
 	lightsService.exposeRpcMethod("getLights", self, self.getLights);
 	lightsService.exposeRpcMethod("setLightState", self, self.setLightState);
 
-	privateService.exposeRpcMethod("getReachableLights", self, getReachableLights);
+	privateService.exposeRpcMethod("getReachableLights", self, self.getReachableLights);
 	};
 
 self.fail = function(err)
