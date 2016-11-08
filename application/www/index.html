@@ -13,7 +13,8 @@
 	<link rel="stylesheet" href="css/skeleton/skeleton.css">
 	<link rel="stylesheet" href="css/index.css">
 	<!-- <link rel="icon" type="image/png" href="images/favicon.png"> -->
-	<script src="http://edge.spaceify.net/libs/spaceifyinitialize.js?jquery"></script>					<!-- Get Spaceify's classes and jQuery. Wait for spaceifyReady event! -->
+	<!-- <script src="http://edge.spaceify.net/libs/spaceifyinitialize.js?jquery"></script>	-->				<!-- Get Spaceify's classes and jQuery. Wait for spaceifyReady event! -->
+	<script src="http://edge.spaceify.net/js/spaceify.app.jquery.js"></script>
 
 	<script type="text/javascript">
 		var spaceify = null;
@@ -23,7 +24,7 @@
 		
 
 			// DOM AND EVENTS -- -- -- -- -- -- -- -- -- -- //
-		window.addEventListener("spaceifyReady", function()
+		window.addEventListener("load", function()
 			{
 			var query = new SpaceifyNetwork().parseQuery(window.location.href);		// driver-philips-hue id could be passed in the URL
 			driverPhilipsHueId = ("driverPhilipsHueId" in query ? query.driverPhilipsHueId : "default");
